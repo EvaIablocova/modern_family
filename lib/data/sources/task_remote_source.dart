@@ -34,6 +34,7 @@ class TaskRemoteSource {
     bool important = false,
     TaskInterval interval = TaskInterval.none,
     int points = 5,
+    List<String> assigneeProfileIds = const [],
   }) async {
     final res = await _dio.post('/tasks', data: {
       'title': title,
@@ -42,6 +43,7 @@ class TaskRemoteSource {
       'important': important,
       'interval': interval.name,
       'points': points,
+      'assigneeProfileIds': assigneeProfileIds,
     });
     return Task.fromJson(res.data as Map<String, dynamic>);
   }

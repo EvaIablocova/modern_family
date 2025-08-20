@@ -23,6 +23,7 @@ class TaskRepository {
     bool important = false,
     TaskInterval interval = TaskInterval.none,
     int points = 5,
+    List<String> assigneeProfileIds = const [],
   }) => _remote.create(
         title: title,
         description: description,
@@ -30,5 +31,6 @@ class TaskRepository {
         important: important,
         interval: interval,
         points: points,
+        assigneeProfileIds: assigneeProfileIds,
       );
 }

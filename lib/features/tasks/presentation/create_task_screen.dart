@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../state/task_providers.dart';
 import '../../../data/models/task.dart';
+import '../../../state/profile_providers.dart';
 
 class CreateTaskScreen extends ConsumerStatefulWidget {
   const CreateTaskScreen({super.key});
@@ -19,6 +20,7 @@ class _CreateTaskScreenState extends ConsumerState<CreateTaskScreen> {
   bool _important = false;
   TaskInterval _interval = TaskInterval.none;
   int _points = 5;
+  final Set<String> _assignees = <String>{};
 
   @override
   void dispose() {
@@ -47,12 +49,15 @@ class _CreateTaskScreenState extends ConsumerState<CreateTaskScreen> {
           important: _important,
           interval: _interval,
           points: _points,
+          assigneeProfileIds: _assignees.toList(),
         );
     if (mounted) Navigator.of(context).pop();
   }
 
   @override
   Widget build(BuildContext context) {
+    final profiles = ref.watch(profilesProvider);
+
     return Scaffold(
       appBar: AppBar(title: const Text('New Task')),
       body: Form(
@@ -125,6 +130,36 @@ class _CreateTaskScreenState extends ConsumerState<CreateTaskScreen> {
                   ),
                 ),
               ],
+            ),
+            const SizedBox(height: 12),
+            profiles.when(
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (e, _) => Text('Error loading profiles: $e'),
+              data: (list) => Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Assign to', style: Theme.of(context).textTheme.titleMedium),
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: list.map((p) {
+                      final selected = _assignees.contains(p.id);
+                      return FilterChip(
+                        label: Text(p.name),
+                        selected: selected,
+                        onSelected: (v) => setState(() {
+                          if (v) {
+                            _assignees.add(p.id);
+                          } else {
+                            _assignees.remove(p.id);
+                          }
+                        }),
+                      );
+                    }).toList(),
+                  ),
+                ],
+              ),
             ),
             const SizedBox(height: 20),
             FilledButton.icon(

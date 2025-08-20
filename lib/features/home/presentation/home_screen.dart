@@ -17,7 +17,16 @@ class HomeScreen extends ConsumerWidget {
     int _len(AsyncValue<List<dynamic>> v) => v.maybeWhen(data: (d) => d.length, orElse: () => 0);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('BeTidy')),
+      appBar: AppBar(
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: const [
+            Text('Modern Family'),
+            SizedBox(height: 2),
+            Text('Welcome, Eva!', style: TextStyle(fontSize: 12, color: Colors.black54)),
+          ],
+        ),
+      ),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [

@@ -93,6 +93,7 @@ class MockTaskRemoteSource extends TaskRemoteSource {
     bool important = false,
     TaskInterval interval = TaskInterval.none,
     int points = 5,
+    List<String> assigneeProfileIds = const [],
   }) async {
     await Future<void>.delayed(const Duration(milliseconds: 350));
     final t = Task(
@@ -103,7 +104,7 @@ class MockTaskRemoteSource extends TaskRemoteSource {
       dueAt: dueAt,
       important: important,
       interval: interval,
-      assigneeProfileIds: const [],
+      assigneeProfileIds: assigneeProfileIds,
       points: points,
     );
     _tasks.add(t);

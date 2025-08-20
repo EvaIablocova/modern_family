@@ -48,6 +48,7 @@ class TaskActions {
     bool important = false,
     TaskInterval interval = TaskInterval.none,
     int points = 5,
+    List<String> assigneeProfileIds = const [],
   }) async {
     await ref.read(taskRepositoryProvider).create(
           title: title,
@@ -56,6 +57,7 @@ class TaskActions {
           important: important,
           interval: interval,
           points: points,
+          assigneeProfileIds: assigneeProfileIds,
         );
     ref.invalidate(overdueTasksProvider);
     ref.invalidate(todayTasksProvider);
