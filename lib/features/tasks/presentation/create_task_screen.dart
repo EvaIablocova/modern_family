@@ -97,7 +97,7 @@ class _CreateTaskScreenState extends ConsumerState<CreateTaskScreen> {
                 const SizedBox(width: 12),
                 Expanded(
                   child: DropdownButtonFormField<TaskInterval>(
-                    value: _interval,
+                    initialValue: _interval,
                     decoration: const InputDecoration(labelText: 'Repeat', border: OutlineInputBorder()),
                     items: TaskInterval.values
                         .map((e) => DropdownMenuItem(value: e, child: Text(e.name)))
@@ -112,7 +112,7 @@ class _CreateTaskScreenState extends ConsumerState<CreateTaskScreen> {
               children: [
                 Expanded(
                   child: DropdownButtonFormField<int>(
-                    value: _points,
+                    initialValue: _points,
                     decoration: const InputDecoration(labelText: 'Points', border: OutlineInputBorder()),
                     items: const [3, 5, 8, 10, 15, 20]
                         .map((e) => DropdownMenuItem(value: e, child: Text('$e pts')))

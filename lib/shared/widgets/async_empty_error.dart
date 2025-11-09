@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class AsyncEmptyError<T> extends StatelessWidget {
-  const AsyncEmptyError({super.key, required this.value, required this.builder, this.empty})
-      : assert(builder != null);
+  const AsyncEmptyError({super.key, required this.value, required this.builder, this.empty});
 
   final AsyncValue<T> value;
   final Widget Function(T data) builder;

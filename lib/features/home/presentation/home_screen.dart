@@ -14,13 +14,13 @@ class HomeScreen extends ConsumerWidget {
     final today = ref.watch(todayTasksProvider);
     final upcoming = ref.watch(upcomingTasksProvider);
 
-    int _len(AsyncValue<List<dynamic>> v) => v.maybeWhen(data: (d) => d.length, orElse: () => 0);
+    int len(AsyncValue<List<dynamic>> v) => v.maybeWhen(data: (d) => d.length, orElse: () => 0);
 
     return Scaffold(
       appBar: AppBar(
-        title: Column(
+        title: const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
+          children: [
             Text('Modern Family'),
             SizedBox(height: 2),
             Text('Welcome, Eva!', style: TextStyle(fontSize: 12, color: Colors.black54)),
@@ -32,7 +32,7 @@ class HomeScreen extends ConsumerWidget {
         children: [
           _QuickStatCard(
             title: 'Overdue',
-            count: _len(overdue),
+            count: len(overdue),
             color: Colors.red.shade400,
             onTap: () => context.go('/tasks'),
             icon: Icons.warning_amber_rounded,
@@ -40,7 +40,7 @@ class HomeScreen extends ConsumerWidget {
           const SizedBox(height: 12),
           _QuickStatCard(
             title: 'Today',
-            count: _len(today),
+            count: len(today),
             color: Colors.teal.shade400,
             onTap: () => context.go('/tasks'),
             icon: Icons.calendar_today_outlined,
@@ -48,7 +48,7 @@ class HomeScreen extends ConsumerWidget {
           const SizedBox(height: 12),
           _QuickStatCard(
             title: 'Upcoming',
-            count: _len(upcoming),
+            count: len(upcoming),
             color: Colors.indigo.shade400,
             onTap: () => context.go('/tasks'),
             icon: Icons.upcoming_outlined,
@@ -56,10 +56,10 @@ class HomeScreen extends ConsumerWidget {
           const SizedBox(height: 24),
           const _AnalyticsPreview(),
           const SizedBox(height: 24),
-          Wrap(
+          const Wrap(
             spacing: 12,
             runSpacing: 12,
-            children: const [
+            children: [
               _NavTile(label: 'Tasks', icon: Icons.checklist_outlined, route: '/tasks'),
               _NavTile(label: 'Projects', icon: Icons.inventory_2_outlined, route: '/projects'),
               _NavTile(label: 'Rank', icon: Icons.emoji_events_outlined, route: '/leaderboard'),

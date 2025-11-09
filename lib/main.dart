@@ -8,9 +8,9 @@ import 'state/app_providers.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   const env = Environment(
-    apiBaseUrl: String.fromEnvironment('API_BASE_URL', defaultValue: 'http://10.0.2.2:8080'),
+    apiBaseUrl: String.fromEnvironment('API_BASE_URL', defaultValue: 'http://10.0.2.2:8069  '),
   );
-  const useMocks = bool.fromEnvironment('USE_MOCKS', defaultValue: true);
+  const useMocks = bool.fromEnvironment('USE_MOCKS', defaultValue: false);
 
   runApp(ProviderScope(
     overrides: [

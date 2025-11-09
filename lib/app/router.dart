@@ -11,7 +11,7 @@ import '../features/leaderboard/presentation/leaderboard_screen.dart';
 import '../features/settings/presentation/settings_screen.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
-  CustomTransitionPage<void> _fadeSlide(GoRouterState state, Widget child) {
+  CustomTransitionPage<void> fadeSlide(GoRouterState state, Widget child) {
     return CustomTransitionPage<void>(
       key: state.pageKey,
       child: child,
@@ -35,31 +35,31 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     routes: [
       GoRoute(
         path: '/home',
-        pageBuilder: (context, state) => _fadeSlide(state, const HomeScreen()),
+        pageBuilder: (context, state) => fadeSlide(state, const HomeScreen()),
       ),
       GoRoute(
         path: '/tasks',
-        pageBuilder: (context, state) => _fadeSlide(state, const TasksScreen()),
+        pageBuilder: (context, state) => fadeSlide(state, const TasksScreen()),
       ),
       GoRoute(
         path: '/tasks/new',
-        pageBuilder: (context, state) => _fadeSlide(state, const CreateTaskScreen()),
+        pageBuilder: (context, state) => fadeSlide(state, const CreateTaskScreen()),
       ),
       GoRoute(
         path: '/projects',
-        pageBuilder: (context, state) => _fadeSlide(state, const ProjectsScreen()),
+        pageBuilder: (context, state) => fadeSlide(state, const ProjectsScreen()),
       ),
       GoRoute(
         path: '/profiles',
-        pageBuilder: (context, state) => _fadeSlide(state, const ProfilesScreen()),
+        pageBuilder: (context, state) => fadeSlide(state, const ProfilesScreen()),
       ),
       GoRoute(
         path: '/leaderboard',
-        pageBuilder: (context, state) => _fadeSlide(state, const LeaderboardScreen()),
+        pageBuilder: (context, state) => fadeSlide(state, const LeaderboardScreen()),
       ),
       GoRoute(
         path: '/settings',
-        pageBuilder: (context, state) => _fadeSlide(state, const SettingsScreen()),
+        pageBuilder: (context, state) => fadeSlide(state, const SettingsScreen()),
       ),
     ],
   );

@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../shared/widgets/footer_nav.dart';
 import '../../../state/task_providers.dart';
+import '../../../state/task_api_provider.dart';
+import '../../../state/app_providers.dart';
 import 'widgets/task_card.dart';
 
 class TasksScreen extends ConsumerStatefulWidget {
@@ -19,7 +21,7 @@ class _TasksScreenState extends ConsumerState<TasksScreen> with SingleTickerProv
   @override
   void initState() {
     super.initState();
-    _tab = TabController(length: 3, vsync: this);
+    _tab = TabController(length: 4, vsync: this);
   }
 
   void _pickDay() async {
@@ -36,18 +38,61 @@ class _TasksScreenState extends ConsumerState<TasksScreen> with SingleTickerProv
     }
   }
 
+  AsyncValue<List<TaskViewModel>> _mapAllToFiltered(AsyncValue<List<TaskViewModel>> all, bool Function(TaskViewModel) pred) {
+    return all.when(
+      loading: () => const AsyncValue.loading(),
+      error: (e, s) => AsyncValue.error(e, s),
+      data: (list) => AsyncValue.data(list.where(pred).toList()),
+    );
+  }
+
+  bool _sameDay(DateTime a, DateTime b) => a.year == b.year && a.month == b.month && a.day == b.day;
+
   @override
   Widget build(BuildContext context) {
-    final overdue = ref.watch(overdueTasksProvider);
-    final today = ref.watch(todayTasksProvider);
-    final upcoming = ref.watch(upcomingTasksProvider);
+    final useMocks = ref.watch(useMocksProvider);
+    final selected = ref.watch(selectedDateProvider);
+
+    // When using mocks/repository the existing providers are used. When using API,
+    // we fetch "all tasks" from TaskApi and filter locally to produce the three
+    // lists (overdue, today, upcoming) so the UI doesn't need to change.
+
+    final AsyncValue<List<TaskViewModel>> all;
+    final AsyncValue<List<TaskViewModel>> overdue;
+    final AsyncValue<List<TaskViewModel>> today;
+    final AsyncValue<List<TaskViewModel>> upcoming;
+
+    // if (useMocks) {
+    //   all = ref.watch(allTasksProvider);
+    //   overdue = ref.watch(overdueTasksProvider);
+    //   today = ref.watch(todayTasksProvider);
+    //   upcoming = ref.watch(upcomingTasksProvider);
+    // } else {
+      final fetched = ref.watch(tasksApiVmProvider);
+      all = fetched;
+      overdue = _mapAllToFiltered(all, (vm) {
+        final d = vm.task.dueAt;
+        if (d == null) return false;
+        return d.isBefore(DateTime(selected.year, selected.month, selected.day)) && vm.task.completedAt == null;
+      });
+      today = _mapAllToFiltered(all, (vm) {
+        final d = vm.task.dueAt;
+        if (d == null) return false;
+        return _sameDay(d, selected);
+      });
+      upcoming = _mapAllToFiltered(all, (vm) {
+        final d = vm.task.dueAt;
+        if (d == null) return false;
+        return d.isAfter(DateTime(selected.year, selected.month, selected.day));
+      });
+    // }
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Tasks'),
         bottom: TabBar(
           controller: _tab,
-          tabs: const [Tab(text: 'Overdue'), Tab(text: 'Today'), Tab(text: 'Upcoming')],
+          tabs: const [Tab(text: 'All'), Tab(text: 'Overdue'), Tab(text: 'Today'), Tab(text: 'Upcoming')],
         ),
         actions: [
           IconButton(onPressed: _pickDay, icon: const Icon(Icons.calendar_month)),
@@ -78,6 +123,7 @@ class _TasksScreenState extends ConsumerState<TasksScreen> with SingleTickerProv
             child: TabBarView(
               controller: _tab,
               children: [
+                _TaskList(state: all),
                 _TaskList(state: overdue),
                 _TaskList(state: today),
                 _TaskList(state: upcoming),
